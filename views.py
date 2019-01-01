@@ -23,11 +23,41 @@ session = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
 
+#Fake data
+categories = [[1, 'shirts', '1'], [2, 'jeans', 1], [3, 'bags', 1]]
+category = [1, 'shirts', 1]
+
+items = [[1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1], [1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1], [1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1]]
+item = [1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1]
+
 @app.route('/')
+@app.route('/catalog')
 def index():
     return 'Welcome to main page'
 
+@app.route('/catalog/<string:category>/items')
+def showItemsOfCategory(category):
+    return 'received showItemsOfCategory %s' % category
 
+@app.route('/catalog/<string:category>/items/<int:item_id>')
+def displayItemOfCategory(category, item_id):
+    return 'displayItemOfCategory {} {}'.format(category, item_id)
+
+@app.route('/catalog/<string:category>/items/add')
+def addItemToCategory(category):
+    return 'received addItemToCategory %s' % category
+
+@app.route('/catalog/<string:category>/items/<int:item_id>/edit')
+def editItemOfCategory(category, item_id):
+    return 'received editItemOfCategory {} {}'.format(category, item_id) 
+
+@app.route('/catalog/<string:category>/items/<int:item_id>/delete')
+def deleteItemOfCategory(category, item_id):
+    return 'deleteItemOfCategory {} {}'.format(category, item_id)
+
+@app.route('/catalog/<string:category>/items/<int:item_id>/update')
+def updateItemOfCategory(category, item_id):
+    return 'updateItemOfCategory {} {}'.format(category, item_id)
 
 
 
