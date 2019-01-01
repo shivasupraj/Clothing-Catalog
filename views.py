@@ -27,13 +27,15 @@ app = Flask(__name__)
 categories = [{ 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }, { 'id' : 2, 'name' : 'jeans', 'user_id' : '1' } , { 'id' : 3, 'name' : 'bags', 'user_id' : '1' }]
 category = { 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }
 
-items = [ { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 }, 
-          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 },
-          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 2, 'user_id' : 1 },
-          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 3, 'user_id' : 1 }
+items = [ { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 1, 'user_id' : 1 }, 
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 1, 'user_id' : 1 },
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 2, 'user_id' : 1 },
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 1, 'user_id' : 1 }, 
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 1, 'user_id' : 1 },
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 2, 'user_id' : 1 },
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 3, 'user_id' : 1 }
 ]
-item = { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 }
-
+item = { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 3, 'user_id' : 1 }
 
 @app.route('/')
 @app.route('/catalog')

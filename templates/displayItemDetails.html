@@ -5,9 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <p> {{ item.name }} </p>
-    <p> {{ item.description }} </p>
-
-    <P> <a href="{{ url_for('editItemOfCategory', category = category, item_id = item.id) }}"> Edit </a> 
-        <a href="{{ url_for('deleteItemOfCategory', category = category, item_id = item.id) }}"> Delete </a></P>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <img src="{{ item.picture }}" alt="{{ item.name }}">
+            </div>
+            <div class="col-6">
+                <h4> {{ item.name }} </h4>
+                <p> {{ item.description }} </p>
+                <P> <a href="{{ url_for('editItemOfCategory', category = category, item_id = item.id) }}"> Edit </a> 
+                    <a href="{{ url_for('deleteItemOfCategory', category = category, item_id = item.id) }}"> Delete </a></P>
+            </div>
+        </div>
+    </div>
 {% endblock %}

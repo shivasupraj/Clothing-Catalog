@@ -1,0 +1,11 @@
+.nav {
+    background-color: aliceblue;
+}
+
+.item-name {
+    display: inline;
+}
+
+.item-price {
+    display: inline;
+}

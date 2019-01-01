@@ -55,6 +55,7 @@ class Product(Base):
     id = Column(Integer, primary_key = True)
     description = Column(String(1000))
     picture = Column(String(250))
+    price = Column(Integer)
     category_id = Column(Integer, ForeignKey('category.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
@@ -65,6 +66,7 @@ class Product(Base):
         return {
             'id' : self.id,
             'name' : self.name,
+            'price' : self.price,
             'description' : self.description,
             'picture' : self.picture,
             'category_id' : self.category_id,
