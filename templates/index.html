@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    {% for category in categories %}
-        <a href="{{ url_for('showItemsOfCategory', category = category.name) }}"> <p> {{ category.name }} </p> </a>
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Index{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    {% for i in items %}
+        <a href="#"> <p> {{ i.name }} </p> </a>
     {% endfor %}
-</body>
-</html>
+{% endblock %}

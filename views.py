@@ -24,7 +24,7 @@ session = scoped_session(sessionmaker(bind=engine))
 app = Flask(__name__)
 
 #Fake data
-categories = [{ 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }, { 'id' : 2, 'name' : 'jeans', 'user_id' : '1' } , { 'id' : 3, 'name' : 'jeans', 'user_id' : '1' }]
+categories = [{ 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }, { 'id' : 2, 'name' : 'jeans', 'user_id' : '1' } , { 'id' : 3, 'name' : 'bags', 'user_id' : '1' }]
 category = { 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }
 
 items = [ { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 }, 
@@ -34,32 +34,34 @@ items = [ { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good sh
 ]
 item = { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 }
 
+
 @app.route('/')
 @app.route('/catalog')
 def index():
     """
+    Displays the home page of the app sorted by the latest added elements.
     """
-    return render_template('index.html', categories = categories)
+    return render_template('index.html', categories = categories, items = items)
 
 @app.route('/catalog/<string:category>/items')
 def showItemsOfCategory(category):
-    return render_template('displayItems.html', category = category, items = items)
+    return render_template('displayItems.html', category = category, categories = categories, items = items)
 
 @app.route('/catalog/<string:category>/items/<int:item_id>')
 def displayItemOfCategory(category, item_id):
-    return render_template('displayItemDetails.html',category = category, item = item)
+    return render_template('displayItemDetails.html', category = category, categories = categories, item = item)
 
 @app.route('/catalog/<string:category>/items/add')
 def addItemToCategory(category):
-    return render_template('addItemToCategory.html')
+    return render_template('addItemToCategory.html', categories = categories)
 
 @app.route('/catalog/<string:category>/items/<int:item_id>/edit')
 def editItemOfCategory(category, item_id):
-    return render_template('editItemDisplay.html', category = category, item = item)
+    return render_template('editItemDisplay.html', category = category, categories = categories, item = item)
 
 @app.route('/catalog/<string:category>/items/<int:item_id>/delete')
 def deleteItemOfCategory(category, item_id):
-    return render_template('deleteItemOfCategory.html', category = category, item = item)
+    return render_template('deleteItemOfCategory.html', category = category, categories = categories, item = item)
 
 
 
