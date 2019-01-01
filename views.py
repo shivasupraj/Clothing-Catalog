@@ -24,40 +24,43 @@ session = scoped_session(sessionmaker(bind=engine))
 app = Flask(__name__)
 
 #Fake data
-categories = [[1, 'shirts', '1'], [2, 'jeans', 1], [3, 'bags', 1]]
-category = [1, 'shirts', 1]
+categories = [{ 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }, { 'id' : 2, 'name' : 'jeans', 'user_id' : '1' } , { 'id' : 3, 'name' : 'jeans', 'user_id' : '1' }]
+category = { 'id' : 1, 'name' : 'shirts', 'user_id' : '1' }
 
-items = [[1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1], [1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1], [1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1]]
-item = [1, 'cherokee shirt', 'A very good shirt', 'link to shirt', 1, 1]
+items = [ { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 }, 
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 },
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 2, 'user_id' : 1 },
+          { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 3, 'user_id' : 1 }
+]
+item = { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'A very good shirt', 'picture' : 'link to shirt', 'category_id' : 1, 'user_id' : 1 }
 
 @app.route('/')
 @app.route('/catalog')
 def index():
-    return 'Welcome to main page'
+    """
+    """
+    return render_template('index.html', categories = categories)
 
 @app.route('/catalog/<string:category>/items')
 def showItemsOfCategory(category):
-    return 'received showItemsOfCategory %s' % category
+    return render_template('displayItems.html', category = category, items = items)
 
 @app.route('/catalog/<string:category>/items/<int:item_id>')
 def displayItemOfCategory(category, item_id):
-    return 'displayItemOfCategory {} {}'.format(category, item_id)
+    return render_template('displayItemDetails.html',category = category, item = item)
 
 @app.route('/catalog/<string:category>/items/add')
 def addItemToCategory(category):
-    return 'received addItemToCategory %s' % category
+    return render_template('addItemToCategory.html')
 
 @app.route('/catalog/<string:category>/items/<int:item_id>/edit')
 def editItemOfCategory(category, item_id):
-    return 'received editItemOfCategory {} {}'.format(category, item_id) 
+    return render_template('editItemDisplay.html', category = category, item = item)
 
 @app.route('/catalog/<string:category>/items/<int:item_id>/delete')
 def deleteItemOfCategory(category, item_id):
-    return 'deleteItemOfCategory {} {}'.format(category, item_id)
+    return render_template('deleteItemOfCategory.html', category = category, item = item)
 
-@app.route('/catalog/<string:category>/items/<int:item_id>/update')
-def updateItemOfCategory(category, item_id):
-    return 'updateItemOfCategory {} {}'.format(category, item_id)
 
 
 
