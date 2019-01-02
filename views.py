@@ -13,11 +13,14 @@ import httplib2
 from flask import make_response
 import requests
 
-from helpers import check_url, check_price
+from flask import session as login_session
 import random, string
+
+from helpers import check_url, check_price
 
 auth = HTTPBasicAuth()
 
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
 engine = create_engine('sqlite:///catalog.db')
 
@@ -41,6 +44,93 @@ app = Flask(__name__)
 # item = { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 3, 'user_id' : 1 }
 
 categories = session.query(Category).all()
+
+# login routes
+@app.route('/login')
+def login():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    return render_template('login.html', STATE = state)
+
+# connecting to the google server
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+    if request.args.get('state') != login_session['state']:
+        response = make_response(json.dumps('Invalid state parameter'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    code = request.data
+
+    try:
+        # Exchange the one-time-access code for the credentials object
+        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow.redirect_uri = 'postmessage'
+        credentials = oauth_flow.step2_exchange(code)
+    except FlowExchangeError:
+        response = make_response(json.dumps('Failed to upgrade the authorization code.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    
+    # Check that the access token is a valid
+    access_token = credentials.access_token
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
+           % access_token)
+    h = httplib2.Http()
+    result = json.loads(h.request(url, 'GET')[1])
+
+    if result.get('error') is not None:
+        response = make_response(json.dumps(result.get('error')), 500)
+        response.headers['Content-Type'] = 'application/json'
+    
+    # Check if the access token is for the intented user
+    google_id = credentials.id_token['sub']
+    if result['user_id'] != google_id:
+        response = make_response(json.dumps('Token\'s userid does not match given user id'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    # check if the access token is valid for this app
+    if result['issued_to'] != CLIENT_ID:
+        response = make_response(json.dumps('Token\'s CLIENTID does not match '), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    # check if the user is already logged in
+    stored_credentials = login_session.get('credentials')
+    stored_google_id = login_session.get('google_id')
+    if stored_credentials is not None and google_id == stored_google_id:
+        response = make_response(json.dumps('User is already logged In'), 200)
+        response.headers['Content-Type'] = 'application/json'
+
+    
+    # store access token in the session for the later use
+    login_session['access_token'] = credentials.access_token
+    login_session['google_id'] = google_id
+    
+    # get user info
+    userinfo_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
+    params = {'access_token' : credentials.access_token, 'alt' : 'json'}
+    answer = requests.get(userinfo_url, params=params)
+    data = json.loads(answer.text)
+
+    
+
+    login_session['username'] = data['name']
+    login_session['picture'] = data['picture']
+    login_session['email'] = data['email']
+
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    #flash("you are now logged in as %s" % login_session['username'])
+    return output
+
+
+
 @app.route('/')
 @app.route('/catalog')
 def index():
@@ -147,9 +237,44 @@ def editItemOfCategory(category, item_id):
         return redirect(url_for('showItemsOfCategory', category = category))
         
 
-@app.route('/catalog/<string:category>/items/<int:item_id>/delete')
+@app.route('/catalog/<string:category>/items/<int:item_id>/delete', methods = ['GET', 'POST'])
 def deleteItemOfCategory(category, item_id):
-    return render_template('deleteItemOfCategory.html', category = category, categories = categories, item = item)
+    if request.method == 'GET':
+        item = session.query(Product).filter_by(id = item_id).first()
+
+        if item is None:
+            flash('Cannot find the product entered')
+            return redirect(url_for('displayItemOfCategory', category = category))     
+        return render_template('deleteItemOfCategory.html', category = category, categories = categories, item = item)
+    else:
+        user = session.query(User).all()[0]
+        category_obj = session.query(Category).filter_by(name = category).first()
+
+        # Checks if an user exists or not
+        if category_obj is None:
+            flash('No category available for the provided value')
+            return redirect(url_for('showItemsOfCategory', category = category))
+        
+        item = session.query(Product).filter_by(id = item_id).first()
+
+        if item is None:
+            flash('Cannot find the product entered')
+            return redirect(url_for('displayItemOfCategory', category = category))
+        
+        # Check if the user is authorized to delete the product
+        if user.id != item.user_id:
+            flash('Cannot perform the operation - delete')
+            return redirect(url_for('displayItemOfCategory', category = category))
+        
+        session.delete(item)
+        session.commit()
+        flash('Succesfully deleted the product')
+        return redirect(url_for('showItemsOfCategory', category = category))
+        
+       
+        
+        
+        
 
 
 

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('deleteItemOfCategory', category = category, item_id = item.id) }}">
+    <form action="{{ url_for('deleteItemOfCategory', category = category, item_id = item.id) }}" method="POST">
         Do you want to delete it
         <input type="submit" value="delete" >
     </form>
