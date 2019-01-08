@@ -10,12 +10,15 @@
             <div class="col-6">
                 <img src="{{ item.picture }}" alt="{{ item.name }}" class="img-fluid"   >
             </div>
+            
             <div class="col-6">
                 <h4> {{ item.name }} </h4>
                 <p> {{ item.description }} </p>
-                <P> <a href="{{ url_for('editItemOfCategory', category = category, item_id = item.id) }}"> Edit </a> 
-                    <a href="{{ url_for('deleteItemOfCategory', category = category, item_id = item.id) }}"> Delete </a></P>
-            </div>
+                {% if item.user_id == login_session['user_id'] %}
+                <p> <a href="{{ url_for('editItemOfCategory', category = category, item_id = item.id) }}"> Edit </a> 
+                    <a href="{{ url_for('deleteItemOfCategory', category = category, item_id = item.id) }}"> Delete </a></p>
+                {% endif %}
+                </div>
         </div>
     </div>
 {% endblock %}

@@ -7,12 +7,15 @@
     crossorigin="anonymous"
 >
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% block script_for_login_top %} {% endblock %}
 <nav class="navbar navbar-light bg-light" >
     <a class="navbar-brand" href="{{ url_for('index') }}">Catalog for Clothing</a>
-  
-    {% if g.user %}
-      <span>{{ g.user['username'] }}</span>
-      <a href="{{ url_for('auth.logout') }}">Log Out</a>
+    
+    {% if login_session['username'] %}
+    <span class="navbar-text">
+      <a href="#">{{ login_session['username'] }}</a>
+      <a href="{{ url_for('gdisconnect') }}">Log Out</a>
+    </span>
     {% else %}
         <span class="navbar-text">
             <a href="#">Register</a>
@@ -43,5 +46,7 @@
     crossorigin="anonymous"
     >
   </script>
+
+  {% block script_for_login_bottom %} {% endblock %}
 
 </section>

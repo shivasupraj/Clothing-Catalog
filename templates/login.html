@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'base.html' %}
 
+{% block script_for_login_top %}
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
     </script>
@@ -9,54 +8,60 @@
     <script src="//apis.google.com/js/platform.js?onload=start"> </script>
 
 <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+{% endblock %}
 
+{% block header %}
+    <h1> {% block title %} Login with Google {% endblock %} </h1>
+{% endblock %}
 
-</head>
+{% block content %}
+<!-- GOOGLE PLUS SIGN IN BUTTON-->
+    <div id="signinButton">
+        <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="783243720722-8t8f7hf6il4r7teo29p3qa18u6qa468j.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+        </span>
+    </div>
+    <div id="result"></div>
 
+<!--END GOOGLE PLUS SIGN IN BUTTON -->
+{% endblock %}
 
-    <body>  
-    <!-- GOOGLE PLUS SIGN IN BUTTON-->
-        <div id="signinButton">
-            <span class="g-signin"
-                data-scope="openid email"
-                data-clientid="783243720722-8t8f7hf6il4r7teo29p3qa18u6qa468j.apps.googleusercontent.com"
-                data-redirecturi="postmessage"
-                data-accesstype="offline"
-                data-cookiepolicy="single_host_origin"
-                data-callback="signInCallback"
-                data-approvalprompt="force">
-            </span>
-        </div>
-        <div id="result"></div>
-
-    <!--END GOOGLE PLUS SIGN IN BUTTON -->
-    </body>
-
-    <script>
-        function signInCallback(authResult){
-            if (authResult['code']){
-                //Hide the google sign in button
-                $('#signinButtion').attr('style', 'display:none');
-                // Send the one-time-use code to the server 
-                $.ajax({
-                    type: 'POST',
-                    url: '/gconnect?state={{STATE}}',
-                    processData: false,
-                    contentType: 'application/octet-stream; charset=utf-8',
-                    data: authResult['code'],
-                    success: function(result){
-                        if (result) {
-                            $('#result').html('Login Successfull </br>' + result + '</br> redirecting');
-                            setTimeout(function() {
-                                window.location.href = '/catalog';
-                            })
-                        }else if (authResult['error']){
-                            console.log('There was an error:' + authResult['error']);
-                        }else{
-                            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-                        }
+{% block script_for_login_bottom %}
+<script>
+    $(document).ready(function(){
+        $('header a').attr('style', 'display:none')
+    })
+    function signInCallback(authResult){
+        if (authResult['code']){
+            //Hide the google sign in button
+            $('#signinButtion').attr('style', 'display:none');
+            // Send the one-time-use code to the server 
+            $.ajax({
+                type: 'POST',
+                url: '/gconnect?state={{STATE}}',
+                processData: false,
+                contentType: 'application/octet-stream; charset=utf-8',
+                data: authResult['code'],
+                success: function(result){
+                    if (result) {
+                        $('#result').html('Login Successfull </br>' + result + '</br> redirecting');
+                        setTimeout(function() {
+                            window.location.href = '/catalog';
+                        })
+                    }else if (authResult['error']){
+                        console.log('There was an error:' + authResult['error']);
+                    }else{
+                        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
                     }
-                });
-            }
+                }
+            });
         }
-    </script>
+    }
+</script>
+{% endblock %}
