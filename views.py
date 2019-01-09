@@ -322,7 +322,29 @@ def deleteItemOfCategory(category, item_id):
         flash('Succesfully deleted the product')
         return redirect(url_for('showItemsOfCategory', category = category))
         
-       
+
+# Return a collection of items in a category
+# in JSON format.
+@app.route('/json/catalog/<string:category>')
+def showProdcutsOfCatalogInJSON(category):
+    category_obj = session.query(Category).filter_by(name=category).first()
+    if category_obj:
+        category_id = category_obj.id
+        items = session.query(Product).filter_by(category_id = category_id)
+        return jsonify(catalog = [ i.serialize for i in items])
+    else:
+        return jsonify(error = 'No data found')
+
+# Returns information about a specific item in an category
+# in JSON format
+@app.route('/json/catalog/<string:category>/items/<int:item_id>')
+def showItemDetailsJSON(category, item_id):
+    item = session.query(Product).filter_by(id = item_id).first()
+    if item:
+        return jsonify(prodcut = item.serialize)
+    else:
+        return jsonify(error = 'No data found')
+
 # Helper functions to create and mange users
 
 def createUser(login_session):
@@ -342,8 +364,7 @@ def getUserID(email):
         user = session.query(User).filter_by(email=email).one()
         return user.id
     except:
-        return None
-        
+        return None    
         
 
 
