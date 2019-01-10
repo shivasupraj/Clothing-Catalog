@@ -27,7 +27,7 @@
     <div class="container">
         <header>
             {% block header %}{% endblock %}
-            <a href="{{ url_for('addItemToCategory', category = category) }}"> Add new item</a>
+            <a href="{{ url_for('addItemToCategory') }}"> Add new item</a>
         </header>
         <nav class="nav nav-fill">
         {% for category in categories %}

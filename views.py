@@ -16,6 +16,10 @@ import requests
 from flask import session as login_session
 import random, string
 
+#import redis for caching and rate limiting
+import redis
+
+#import the helper functions
 from helpers import checkUrl, checkPrice
 
 auth = HTTPBasicAuth()
@@ -43,6 +47,7 @@ app = Flask(__name__)
 # ]
 # item = { 'id' : 1, 'name' : 'cherokee shirt', 'description' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet. Praesent eleifend laoreet pulvinar.', 'price' : 12, 'picture' : 'https://s7d5.scene7.com/is/image/ColumbiaSportswear2/1617431_073_f?$MHW_grid$&align=0,1', 'category_id' : 3, 'user_id' : 1 }
 
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
 categories = session.query(Category).all()
 
 # login routes
@@ -177,11 +182,20 @@ def index():
     """
     Displays the home page of the app sorted by the latest added elements.
     """
-    items = session.query(Product).all()
+    r.ltrim('newlyAddedProductsToCatalog', 0, 5)
+    items_str = r.lrange('newlyAddedProductsToCatalog', 0, -1)
+    items = []
+    for item_str in items_str:
+        items.append(json.loads(item_str))
+
+    #items = session.query(Product).all()
+    flash('Newly added items to the catalog')
     return render_template('index.html', categories = categories, items = items, login_session = login_session)
 
 @app.route('/catalog/<string:category>/items')
 def showItemsOfCategory(category):
+    if category.lower() == 'recent':
+        return redirect(url_for('index'))
     category_obj = session.query(Category).filter_by(name = category).first()
     items = session.query(Product).filter_by(category_id = category_obj.id)
     return render_template('displayItems.html', category = category, categories = categories, items = items, login_session = login_session)
@@ -191,15 +205,16 @@ def displayItemOfCategory(category, item_id):
     item = session.query(Product).filter_by(id = item_id).first()
     return render_template('displayItemDetails.html', category = category, categories = categories, item = item, login_session = login_session)
 
-@app.route('/catalog/<string:category>/items/add', methods = ['GET', 'POST'])
-def addItemToCategory(category):
+@app.route('/catalog/items/add', methods = ['GET', 'POST'])
+def addItemToCategory():
     if 'username' not in login_session:
         flash('Please login to add a product to the catalog')
         return redirect(url_for('index'))
     if request.method == 'GET':
-        return render_template('addItemToCategory.html', category = category, categories = categories, login_session = login_session)
+        return render_template('addItemToCategory.html', categories = categories, login_session = login_session)
     else:
         user = getUserInfo(login_session['user_id'])
+        category = request.form['category']
         category_obj = session.query(Category).filter_by(name = category).first()
 
         # Checks if an user exists or not
@@ -225,9 +240,18 @@ def addItemToCategory(category):
             category = category_obj,
             user = user
         )
-
         session.add(item)
+        session.flush()
+        session.refresh(item)
+
+        # adds new element to the redis cache
+        item_dict = item.serialize
+        item_dict['category'] = category
+        item_json = json.dumps(item_dict)
+        r.lpush('newlyAddedProductsToCatalog', item_json)
+
         session.commit()
+
         flash('Successfully added the product to catalog - %s' % category)
         return redirect(url_for('showItemsOfCategory', category = category))
 
