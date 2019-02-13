@@ -1,6 +1,7 @@
 import requests
 import re
 
+
 def checkUrl(url):
     try:
         request = requests.get(url)
@@ -8,11 +9,10 @@ def checkUrl(url):
     except Exception:
         return False
 
+
 def checkPrice(price):
     try:
         float(price)
         return True
     except ValueError:
         return False
-
-
