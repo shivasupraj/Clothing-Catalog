@@ -163,7 +163,9 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    url = """https://accounts.google.com/o/oauth2/revoke?token=%s""" % login_session['access_token']
+    url = ("https://accounts.google.com/o/"
+           "oauth2/revoke?token=%s") % login_session['access_token']
+
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
@@ -197,9 +199,10 @@ def index():
     items_str = r.lrange('newlyAddedProductsToCatalog', 0, -1)
     items = []
     for item_str in items_str:
+        print(item_str)
         items.append(json.loads(item_str))
 
-    # items = session.query(Product).all()
+    items = session.query(Product).all()[:5]
     flash('Newly added items to the catalog')
     return render_template(
         'index.html',
@@ -227,7 +230,6 @@ def showItemsOfCategory(category):
 @app.route('/catalog/<string:category>/items/<int:item_id>')
 def displayItemOfCategory(category, item_id):
     item = session.query(Product).filter_by(id=item_id).first()
-    print(login_session['user_id'], item.user_id)
     return render_template(
             'displayItemDetails.html',
             category=category,
@@ -357,12 +359,14 @@ def editItemOfCategory(category, item_id):
             return redirect(
                     url_for('showItemsOfCategory', category=category)
                 )
-
+        new_category_obj = session.query(
+                Category
+            ).filter_by(name=request.form['category']).first()
         item.name = request.form['name']
         item.description = request.form['description']
         item.picture = request.form['image_url']
         item.price = request.form['price']
-        item.category = category_obj
+        item.category = new_category_obj
         item.user = user
 
         session.add(item)

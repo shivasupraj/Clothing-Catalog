@@ -7,8 +7,13 @@
 
 ### To run this application
 
-Download and install redis on your machine and then run
+Download Python 3.x from [here](https://www.python.org/downloads/)
+Download Redis 5.0 from [here](https://redis.io/download)
+
+Download and install Python and Redis on your machine and then run
+
 
 `redis server` to start the Redis server before running the web server.
 Then run `python views.py` to run web server.
+
 
