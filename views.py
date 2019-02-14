@@ -202,7 +202,7 @@ def index():
     for item_str in items_str:
         print(item_str)
         items.append(json.loads(item_str))
-
+    # update this line
     items = session.query(Product).all()[:5]
     flash('Newly added items to the catalog')
     return render_template(
