@@ -163,8 +163,9 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    url = ("https://accounts.google.com/o/"
-           "oauth2/revoke?token=%s") % login_session['access_token']
+    url = (
+        "https://accounts.google.com/o/oauth2/revoke?token=%s"
+        ) % login_session['access_token']
 
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -176,7 +177,7 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-
+        del login_session['user_id']
         flash('succefully disconnected')
         return redirect(url_for('index'))
     else:
@@ -310,6 +311,8 @@ def editItemOfCategory(category, item_id):
     if 'username' not in login_session:
         flash('Please login to continue to edit the product')
         return redirect(url_for('index'))
+    item = session.query(Product).filter_by(id=item_id).first()
+
     if request.method == 'GET':
         item = session.query(Product).filter_by(id=item_id).first()
         if item is None:
@@ -319,6 +322,8 @@ def editItemOfCategory(category, item_id):
                     )
         if item.user_id != login_session['user_id']:
             flash('you don\'t have the permission to edit the product')
+            return redirect(url_for('index'))
+
         return render_template(
                     'editItemDisplay.html',
                     category=category,
@@ -392,6 +397,10 @@ def deleteItemOfCategory(category, item_id):
             return redirect(
                     url_for('displayItemOfCategory', category=category)
                 )
+        if item.user_id != login_session['user_id']:
+            flash('you don\'t have the permission to delete the product')
+            return redirect(url_for('index'))
+
         return render_template(
                     'deleteItemOfCategory.html',
                     category=category,
