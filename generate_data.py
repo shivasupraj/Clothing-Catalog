@@ -12,8 +12,8 @@ session = scoped_session(sessionmaker(bind=engine))
 user = User(
     name='Rob king',
     email='robking@email.com',
-    picture='''https://encrypted-tbn0.gstatic.com/
-    images?q=tbn:ANd9GcTfobIEm2kfH0xPgbhF6j4MWtQGMOFbpprh3cxulpxknBJ-x2TV'''
+    picture=("https://encrypted-tbn0.gstatic.com/"
+    "images?q=tbn:ANd9GcTfobIEm2kfH0xPgbhF6j4MWtQGMOFbpprh3cxulpxknBJ-x2TV")
     )
 session.add(user)
 session.commit()
@@ -58,8 +58,8 @@ product1 = Product(
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.''',
     price=12,
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-    1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=jeans,
     user=user)
 session.add(product1)
@@ -71,8 +71,8 @@ product1 = Product(
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.''',
     price=12,
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-    1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=jeans,
     user=user)
 session.add(product1)
@@ -84,8 +84,8 @@ product1 = Product(
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.''',
     price=12,
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-    1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=jeans,
     user=user)
 session.add(product1)
@@ -97,8 +97,8 @@ product1 = Product(
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.''',
     price=12,
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-    1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=jeans,
     user=user)
 session.add(product1)
@@ -110,8 +110,8 @@ product1 = Product(
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.''',
     price=12,
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-    1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=jeans,
     user=user)
 session.add(product1)
@@ -123,8 +123,8 @@ product1 = Product(
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.''',
     price=12,
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-    1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=shoes,
     user=user)
 session.add(product1)
@@ -135,8 +135,8 @@ product1 = Product(
     description='''Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Aenean dapibus dui sapien, vitae tempus felis aliquet sit amet.
     Praesent eleifend laoreet pulvinar.', price=12''',
-    picture='''https://s7d5.scene7.com/is/image/ColumbiaSportswear2/
-            1617431_073_f?$MHW_grid$&align=0,1''',
+    picture=("https://s7d5.scene7.com/is/image/ColumbiaSportswear2/"
+    "1617431_073_f?$MHW_grid$&align=0,1"),
     category=shirts,
     user=user)
 session.add(product1)

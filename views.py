@@ -163,8 +163,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    url = '''https://accounts.google.com/o/oauth2/revoke?token
-            =%s''' % login_session['access_token']
+    url = """https://accounts.google.com/o/oauth2/revoke?token=%s""" % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
@@ -228,6 +227,7 @@ def showItemsOfCategory(category):
 @app.route('/catalog/<string:category>/items/<int:item_id>')
 def displayItemOfCategory(category, item_id):
     item = session.query(Product).filter_by(id=item_id).first()
+    print(login_session['user_id'], item.user_id)
     return render_template(
             'displayItemDetails.html',
             category=category,
